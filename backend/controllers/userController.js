@@ -1,25 +1,81 @@
+require("dotenv").config();
+
 const zod = require("zod");
+const { fromZodError } = require("zod-validation-error");
+const jwt = require("jsonwebtoken");
+const User = require("../models/User");
+
+const errorMessages = {
+    username: "Please enter a valid email",
+    password: "Password must have more than 4 characters",
+    firstName: "Please enter your first name",
+    lastName: "Please enter your last name",
+};
+const maxAge = 3 * 24 * 60 * 60;
+
+function handleValidationError(err, res) {
+    const validationError = fromZodError(err).toString().split(';');
+    const errors = {
+        username: "",
+        password: "",
+        firstName: "",
+        lastName: "",
+    };
+
+    validationError.forEach((errorMessage) => {
+        Object.keys(errors).forEach((field) => {
+            if (errorMessage.includes(field)) {
+                errors[field] = errorMessages[field];
+            }
+        });
+    });
+
+    res.status(411).json({ errors });
+}
+
+function createToken(userId) {
+    const SECRET = process.env.JWT_SECRET;
+    return jwt.sign({ userId }, SECRET, { expiresIn: maxAge });
+}
+
+const zodSignUp = zod.object({
+    username: zod.string().email(),
+    firstName: zod.string(),
+    lastName: zod.string(),
+    password: zod.string().min(4)
+});
 
 module.exports.signup_get = ((req, res) => {
     res.send("Signup Page");
 });
 
-const signupBody = zod.object({
-    username: zod.string().email(),
-    firstName: zod.string(),
-    lastName: zod.string(),
-    password: zod.string()
-})
+module.exports.signup_post = (async (req, res) => {
+    try {
+        zodSignUp.parse(req.body);
 
-module.exports.signup_post = ((req, res) => {
-    const { success, error } = signupBody.safeParse(req.body);
+        const { username, password, firstName, lastName } = req.body;
 
-    if (success) {
-        res.send("All inputs are valid.");
+        const existingUser = await User.findOne({
+            username: req.body.username
+        })
+        if (existingUser) {
+            return res.status(411).json({
+                errors: {
+                    username: "Email already taken/Incorrect inputs"
+                }
+            })
+        }
+
+        try {
+            const user = User.create({ username, password, firstName, lastName });
+            const token = createToken(user._id);
+            res.status(200).json({ message: "Token created successfully.", token });
+        }
+        catch (err) {
+            res.status(411).json({ error: "Oops, something went wrong." });
+        }
     }
-
-    if (error) {
-        res.send("One or more inputs are ivalid.")
+    catch (err) {
+        handleValidationError(err, res);
     }
-
 })
