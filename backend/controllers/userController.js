@@ -4,6 +4,7 @@ const zod = require("zod");
 const { fromZodError } = require("zod-validation-error");
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
+const authMiddleware = require("../middleware/authMiddleware");
 
 const errorMessages = {
     username: "Please enter a valid email",
@@ -45,6 +46,17 @@ const zodSignUp = zod.object({
     password: zod.string().min(4)
 });
 
+const zodLogin = zod.object({
+    username: zod.string().email(),
+    password: zod.string()
+});
+
+const zodUpdate = zod.object({
+    firstName: zod.string().optional(),
+    lastName: zod.string().optional(),
+    password: zod.string().min(4).optional()
+});
+
 module.exports.signup_get = ((req, res) => {
     res.send("Signup Page");
 });
@@ -73,6 +85,48 @@ module.exports.signup_post = (async (req, res) => {
         }
         catch (err) {
             res.status(411).json({ error: "Oops, something went wrong." });
+        }
+    }
+    catch (err) {
+        handleValidationError(err, res);
+    }
+});
+
+module.exports.login_post = (async (req, res) => {
+    try {
+        zodLogin.parse(req.body);
+
+        const { username, password } = req.body;
+
+        try {
+            const user = await User.login(username, password);
+            const token = createToken(user._id);
+            res.status(200).json({ token });
+        }
+        catch (err) {
+            res.status(411).json({ error: err.message });
+        }
+
+    }
+    catch (err) {
+        res.status(411).json({ error: "Invalid credentials" })
+    }
+});
+
+
+module.exports.update_put = (async (req, res) => {
+    try {
+        zodUpdate.parse(req.body);
+
+        try {
+            await User.updateOne(req.body, {
+                id: req.userId
+            });
+
+            res.status(200).json({ message: "Profile updated successfully" });
+        }
+        catch (err) {
+            res.status(411).json({ error: err })
         }
     }
     catch (err) {
