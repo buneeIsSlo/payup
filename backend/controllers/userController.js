@@ -4,7 +4,6 @@ const zod = require("zod");
 const { fromZodError } = require("zod-validation-error");
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
-const authMiddleware = require("../middleware/authMiddleware");
 
 const errorMessages = {
     username: "Please enter a valid email",
@@ -119,9 +118,10 @@ module.exports.update_put = (async (req, res) => {
         zodUpdate.parse(req.body);
 
         try {
-            await User.updateOne(req.body, {
-                id: req.userId
-            });
+            await User.updateOne(
+                { _id: req.userId },
+                { $set: req.body }
+            );
 
             res.status(200).json({ message: "Profile updated successfully" });
         }
