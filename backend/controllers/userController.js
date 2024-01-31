@@ -132,4 +132,36 @@ module.exports.update_put = (async (req, res) => {
     catch (err) {
         handleValidationError(err, res);
     }
-})
+});
+
+module.exports.bulk_get = (async (req, res) => {
+    try {
+        const filter = req.query.filter || "";
+
+        const users = await User.find({
+            "$or": [{
+                firstName: {
+                    "$regex": filter
+                }
+            },
+            {
+                lastName: {
+                    "$regex": filter
+                }
+            }
+            ]
+        });
+
+        res.json({
+            user: users.map((user) => ({
+                username: user.username,
+                firstName: user.firstName,
+                lastName: user.lastName,
+                _id: user._id
+            }))
+        });
+    }
+    catch (err) {
+        res.status(400).json({ error: err });
+    }
+});
