@@ -4,6 +4,7 @@ const zod = require("zod");
 const { fromZodError } = require("zod-validation-error");
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
+const Account = rquire("../models/Account");
 
 const errorMessages = {
     username: "Please enter a valid email",
@@ -99,6 +100,13 @@ module.exports.login_post = (async (req, res) => {
 
         try {
             const user = await User.login(username, password);
+
+            const randomBalance = Math.floor(Math.random() * 5001) + 5000; // Generates a random number btetween 5,000 and 10,000.
+            await Amount.create({
+                userId: user._id,
+                balance: randomBalance
+            })
+
             const token = createToken(user._id);
             res.status(200).json({ token });
         }
