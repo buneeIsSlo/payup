@@ -4,7 +4,7 @@ const zod = require("zod");
 const { fromZodError } = require("zod-validation-error");
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
-const Account = rquire("../models/Account");
+const Account = require("../models/Account");
 
 const errorMessages = {
     username: "Please enter a valid email",
@@ -41,8 +41,8 @@ function createToken(userId) {
 
 const zodSignUp = zod.object({
     username: zod.string().email(),
-    firstName: zod.string(),
-    lastName: zod.string(),
+    firstName: zod.string().min(1),
+    lastName: zod.string().min(1),
     password: zod.string().min(4)
 });
 
@@ -52,8 +52,8 @@ const zodLogin = zod.object({
 });
 
 const zodUpdate = zod.object({
-    firstName: zod.string().optional(),
-    lastName: zod.string().optional(),
+    firstName: zod.string().min(1).optional(),
+    lastName: zod.string().min(1).optional(),
     password: zod.string().min(4).optional()
 });
 
