@@ -2,23 +2,25 @@ require("dotenv").config();
 const jwt = require("jsonwebtoken");
 
 const authMiddleware = (req, res, next) => {
-    const authHeader = req.headers.authorization;
-
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
-        res.status(403).json({});
-    }
-
-    const token = authHeader.split(" ")[1];
-    const SECRET = process.env.JWT_SECRET;
     try {
-        const decodedToken = jwt.verify(token, SECRET);
-        req.userId = decodedToken.userId;
-        next();
+        const token = req.cookies.jwt;
+        const SECRET = process.env.JWT_SECRET;
+
+        if (!token) {
+            throw new Error("Token not found");
+        }
+
+        jwt.verify(token, SECRET, (err, decodedToken) => {
+            if (err) {
+                throw new Error("Token verification failed");
+            } else {
+                req.userId = decodedToken.userId;
+                next();
+            }
+        });
+    } catch (err) {
+        res.status(401).json({ error: "Unauthorized request" });
     }
-    catch (err) {
-        res.status(403).json({});
-    }
-}
+};
 
 module.exports = authMiddleware;
-
