@@ -57,10 +57,6 @@ const zodUpdate = zod.object({
     password: zod.string().min(4).optional()
 });
 
-module.exports.signup_get = ((req, res) => {
-    res.send("Signup Page");
-});
-
 module.exports.signup_post = (async (req, res) => {
     try {
         zodSignUp.parse(req.body);
@@ -79,9 +75,16 @@ module.exports.signup_post = (async (req, res) => {
         }
 
         try {
-            const user = User.create({ username, password, firstName, lastName });
+            const user = await User.create({ username, password, firstName, lastName });
             const token = createToken(user._id);
-            res.status(200).json({ message: "Token created successfully.", token });
+            res.cookie('jwt', token, {
+                httpOnly: true,
+                maxAge: maxAge * 1000,
+                domain: "localhost",
+                sameSite: "none",
+                secure: true
+            });
+            res.status(200).json({ user });
         }
         catch (err) {
             res.status(411).json({ error: "Oops, something went wrong." });
@@ -171,5 +174,21 @@ module.exports.bulk_get = (async (req, res) => {
     }
     catch (err) {
         res.status(400).json({ error: err });
+    }
+});
+
+module.exports.auth_get = (async (req, res) => {
+    try {
+        const user = await User.findOne({ _id: req.userId });
+        res.status(200).json({
+            user: {
+                username: user.username,
+                firstName: user.firstName,
+                lastName: user.lastName,
+            }
+        });
+    }
+    catch (err) {
+        res.status(403).json({ error: "Can't fetch User: " + err })
     }
 });
