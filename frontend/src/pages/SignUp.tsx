@@ -1,3 +1,5 @@
+import { useState } from "react";
+import { validateFormData } from "@/lib/api-client";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -11,15 +13,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Logo from "@/components/Logo";
 import { Link } from "react-router-dom";
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-
-type TFormData = {
-  firstName: string;
-  lastName: string;
-  username: string;
-  password: string;
-};
+import { TUserData } from "@/lib/types";
+import { useAuthContext } from "@/hooks/useAuthContext";
 
 const ErrorMessage = ({ id, message }: { id: string; message: string }) => {
   return (
@@ -34,37 +30,21 @@ const ErrorMessage = ({ id, message }: { id: string; message: string }) => {
   );
 };
 
-async function validateFormData(data: TFormData) {
-  try {
-    const response = await fetch("http://localhost:5001/api/v1/user/signup", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    });
-
-    const jsonData = await response.json();
-    return jsonData;
-  } catch (err) {
-    return err;
-  }
-}
-
 const SignUp = () => {
-  const [formData, setFormData] = useState<TFormData>({
+  const [formData, setFormData] = useState<TUserData>({
     firstName: "",
     lastName: "",
     username: "",
     password: "",
   });
-  const [errors, setErrors] = useState<Record<keyof TFormData, string>>({
+  const [errors, setErrors] = useState<Record<keyof TUserData, string>>({
     firstName: "",
     lastName: "",
     username: "",
     password: "",
   });
   const [isValidatingForm, setIsValidatingForm] = useState<boolean>(false);
+  const { dispatch } = useAuthContext();
   const navigate = useNavigate();
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -84,6 +64,7 @@ const SignUp = () => {
     e.preventDefault();
     try {
       setIsValidatingForm(true);
+
       const response = await validateFormData(formData);
       if (response.errors) {
         const entries = Object.entries(response.errors);
@@ -93,7 +74,8 @@ const SignUp = () => {
             [type]: message,
           }));
         }
-      } else {
+      } else if (response.user) {
+        dispatch({ type: "login", payload: response.user });
         navigate("/dashboard");
       }
     } catch (error) {
