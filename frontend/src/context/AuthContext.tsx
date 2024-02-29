@@ -1,5 +1,5 @@
-import React, { createContext, useReducer, ReactNode, useEffect } from "react";
-import { TUserData } from "@/lib/types";
+import React, { createContext, useReducer } from "react";
+import { TUserData, TChildren } from "@/lib/types";
 
 type TUser = {
   user: TUserData | null;
@@ -12,9 +12,10 @@ type ContextProps = {
   dispatch: React.Dispatch<ACTION_TYPE>;
 };
 
-const INITIAL_STATE: TUser = {
-  user: null,
+type ProviderProps = TChildren & {
+  userData: TUserData;
 };
+
 const authReducer = (state: TUser, action: ACTION_TYPE): TUser => {
   switch (action.type) {
     case "login":
@@ -27,20 +28,11 @@ const authReducer = (state: TUser, action: ACTION_TYPE): TUser => {
 };
 
 const AuthContext = createContext<ContextProps | null>(null);
-const AuthContextProvider = ({
-  userData,
-  children,
-}: {
-  userData: TUserData;
-  children: ReactNode;
-}) => {
-  const [state, dispatch] = useReducer(authReducer, INITIAL_STATE);
-
-  useEffect(() => {
-    if (userData) {
-      dispatch({ type: "login", payload: userData });
-    }
-  }, [userData]);
+const AuthContextProvider = ({ userData, children }: ProviderProps) => {
+  const initialState: TUser = {
+    user: userData || null,
+  };
+  const [state, dispatch] = useReducer(authReducer, initialState);
 
   return (
     <AuthContext.Provider value={{ state, dispatch }}>
