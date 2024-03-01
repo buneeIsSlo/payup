@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -11,8 +12,65 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Logo from "@/components/Logo";
 import { Link } from "react-router-dom";
+import { useAuthContext } from "@/hooks/useAuthContext";
+import { useNavigate } from "react-router-dom";
+import { validateLoginForm } from "@/lib/api-client";
+import { TLoginUserData } from "@/lib/types";
+
+const ErrorMessage = ({ id, message }: { id: string; message: string }) => {
+  return (
+    <p
+      id={id}
+      className="text-destructive text-[14px] font-semibold absolute -bottom-6 right-1/2 translate-x-1/2"
+      aria-live="polite"
+      aria-atomic="true"
+    >
+      <i>{message}</i>
+    </p>
+  );
+};
+
+type TLoginError = string;
 
 const Login = () => {
+  const [formData, setFormData] = useState<TLoginUserData>({
+    username: "",
+    password: "",
+  });
+  const [error, setError] = useState<TLoginError>("");
+  const [isValidatingForm, setIsValidatingForm] = useState<boolean>(false);
+  const { dispatch } = useAuthContext();
+  const navigate = useNavigate();
+
+  function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const { name, value } = e.currentTarget;
+
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+    setError("");
+  }
+
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+
+    try {
+      setIsValidatingForm(true);
+      const response = await validateLoginForm(formData);
+      if (response.error) {
+        setError(response.error);
+      } else if (response.user) {
+        dispatch({ type: "login", payload: response.user });
+        navigate("/dashboard", { replace: true });
+      }
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setIsValidatingForm(false);
+    }
+  }
+
   return (
     <main className="grid place-content-center h-[100svh]">
       <div className="absolute inset-0 -z-10 h-full w-full bg-slate-50 bg-[radial-gradient(#e6e6e6_1px,transparent_1px)] [background-size:16px_16px]"></div>
@@ -27,23 +85,40 @@ const Login = () => {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form>
+          <form onSubmit={handleSubmit} aria-describedby="login-error">
             <div className="grid w-full items-center gap-4">
               <div className="flex flex-col space-y-2">
                 <Label htmlFor="email">Email</Label>
                 <Input
                   type="email"
                   id="email"
+                  name="username"
                   placeholder="coolname@mail.com"
+                  onChange={handleChange}
                 />
               </div>
               <div className="flex flex-col space-y-2">
                 <Label htmlFor="password">Password</Label>
-                <Input type="password" id="password" />
+                <Input
+                  type="password"
+                  id="password"
+                  name="password"
+                  onChange={handleChange}
+                />
               </div>
-              <Button type="submit" className="w-full">
-                Log in
-              </Button>
+              <div className="relative">
+                {error && <ErrorMessage id="login-error" message={error} />}
+                {!isValidatingForm && (
+                  <Button type="submit" className="w-full mt-1">
+                    Log in
+                  </Button>
+                )}
+                {isValidatingForm && (
+                  <Button className="w-full mt-1" disabled>
+                    Please wait
+                  </Button>
+                )}
+              </div>
             </div>
           </form>
         </CardContent>

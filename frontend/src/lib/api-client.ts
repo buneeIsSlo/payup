@@ -1,4 +1,4 @@
-import { TUserData } from "./types";
+import { TUserData, TLoginUserData } from "./types";
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 export async function validateToken() {
@@ -19,6 +19,24 @@ export async function validateToken() {
 export async function validateFormData(data: TUserData) {
     try {
         const response = await fetch(`${API_BASE_URL}/api/v1/user/signup`, {
+            method: "POST",
+            credentials: "include",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+        });
+
+        const jsonData = await response.json();
+        return jsonData;
+    } catch (err) {
+        return err;
+    }
+}
+
+export async function validateLoginForm(data: TLoginUserData) {
+    try {
+        const response = await fetch(`${API_BASE_URL}/api/v1/user/login`, {
             method: "POST",
             credentials: "include",
             headers: {
