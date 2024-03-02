@@ -19,6 +19,7 @@ import Login from "./pages/Login.tsx";
 import NotFound from "./pages/NotFound.tsx";
 import PrivateRoute from "./components/PrivateRoute.tsx";
 import { validateToken } from "./lib/api-client.ts";
+import HomeLayout from "./components/HomeLayout.tsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -27,9 +28,11 @@ const router = createBrowserRouter(
       element={<Root />}
       loader={() => defer({ dataPromise: validateToken() })}
     >
-      <Route index element={<Landing />} />
-      <Route path="signup" element={<SignUp />} />
-      <Route path="login" element={<Login />} />
+      <Route element={<HomeLayout />}>
+        <Route index element={<Landing />} />
+        <Route path="signup" element={<SignUp />} />
+        <Route path="login" element={<Login />} />
+      </Route>
       <Route
         path="dashboard/"
         element={
