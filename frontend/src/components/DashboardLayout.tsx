@@ -1,8 +1,8 @@
-import Header from "./components/Header";
-import Footer from "./components/Footer";
+import Header from "./Header";
+import Footer from "./Footer";
 import { Outlet } from "react-router-dom";
 
-const Layout = () => {
+const DashboardLayout = () => {
   return (
     <>
       <Header />
@@ -12,4 +12,4 @@ const Layout = () => {
   );
 };
 
-export default Layout;
+export default DashboardLayout;

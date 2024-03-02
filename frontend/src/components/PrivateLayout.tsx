@@ -1,14 +1,14 @@
 import { useAuthContext } from "@/hooks/useAuthContext";
 import { Navigate } from "react-router-dom";
-import { TChildren } from "@/lib/types";
+import DashboardLayout from "./DashboardLayout";
 
-const PrivateRoute = ({ children }: TChildren) => {
+const PrivateLayout = () => {
   const { state } = useAuthContext();
   if (state.user === null || state.user === undefined) {
     return <Navigate to={"/login"} replace />;
   }
 
-  return children;
+  return <DashboardLayout />;
 };
 
-export default PrivateRoute;
+export default PrivateLayout;
