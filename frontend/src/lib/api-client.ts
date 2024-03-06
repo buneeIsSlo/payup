@@ -51,3 +51,17 @@ export async function validateLoginForm(data: TLoginUserData) {
         return err;
     }
 }
+
+export async function clearAuthCookie() {
+    try {
+        await fetch(`${API_BASE_URL}/api/v1/user/logout`, {
+            method: "GET",
+            credentials: "include",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+    } catch (err) {
+        return err;
+    }
+}
