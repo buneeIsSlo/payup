@@ -12,12 +12,10 @@ const Root = () => {
     <Suspense fallback={<h1 className="text-2xl">Loading...</h1>}>
       <Await resolve={dataPromise}>
         {(data) => {
-          if (!data.user) {
-            data = null;
-          }
-          console.log(data, "user data");
+          const user = data.user || null;
+          console.log({ user }, "user data");
           return (
-            <AuthContextProvider userData={data}>
+            <AuthContextProvider userData={user}>
               <Outlet />
             </AuthContextProvider>
           );
