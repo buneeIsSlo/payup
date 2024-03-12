@@ -65,3 +65,19 @@ export async function clearAuthCookie() {
         return err;
     }
 }
+
+export async function fetchUsers(filter?: string) {
+    try {
+        const response = await fetch(`${API_BASE_URL}/api/v1/user/bulk?filter=${filter ? filter : ""}`, {
+            method: "GET",
+            credentials: "include",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+        return response.json();
+    }
+    catch (err) {
+        return err;
+    }
+}
