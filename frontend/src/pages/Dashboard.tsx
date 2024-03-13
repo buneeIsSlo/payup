@@ -17,8 +17,8 @@ const Dashboard = () => {
           ? await fetchUsers()
           : await fetchUsers(debounceSearch);
 
-      if (response.user) {
-        setUsers(response.user);
+      if (response.users) {
+        setUsers(response.users);
       }
       return;
     }

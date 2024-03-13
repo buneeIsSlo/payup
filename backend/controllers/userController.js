@@ -184,15 +184,9 @@ module.exports.bulk_get = (async (req, res) => {
             }
             ]
         });
+        const filteredUsers = users.filter((user) => String(user._id) !== req.userId); // returns every user except the logged in user
 
-        res.json({
-            user: users.map((user) => ({
-                username: user.username,
-                firstName: user.firstName,
-                lastName: user.lastName,
-                _id: user._id
-            }))
-        });
+        res.status(200).json({ users: filteredUsers });
     }
     catch (err) {
         res.status(400).json({ error: err });
