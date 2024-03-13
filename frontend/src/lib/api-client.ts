@@ -81,3 +81,19 @@ export async function fetchUsers(filter?: string) {
         return err;
     }
 }
+
+export async function fetchBalance() {
+    try {
+        const response = await fetch(`${API_BASE_URL}/api/v1/account/balance`, {
+            method: "GET",
+            credentials: "include",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+        return response.json();
+    }
+    catch (err) {
+        return err;
+    }
+}

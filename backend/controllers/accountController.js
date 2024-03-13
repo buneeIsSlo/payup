@@ -6,7 +6,7 @@ module.exports.balance_get = (async (req, res) => {
             userId: req.userId
         });
 
-        res.status(200).json({ balance: account.balance });
+        res.status(200).json({ balance: account[0].balance });
     }
     catch (err) {
         res.status(403).json({ error: err });
