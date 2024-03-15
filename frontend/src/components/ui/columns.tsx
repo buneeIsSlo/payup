@@ -1,5 +1,8 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { FriendsAvatar } from "../Avatars";
+import { Link } from "react-router-dom";
+import { Button } from "./button";
+import { PiArrowLineUpRight } from "react-icons/pi";
 
 export type User = {
   firstName: string;
@@ -33,6 +36,23 @@ const columns: ColumnDef<User>[] = [
     cell: ({ row }) => (
       <div className="">
         <span>{row.original.username}</span>
+      </div>
+    ),
+  },
+  {
+    id: "send",
+    cell: ({ row }) => (
+      <div>
+        <Button variant={"link"}>
+          <Link
+            to={"send"}
+            state={{ friend: row.original }}
+            className="flex space-x-0 items-center"
+          >
+            <span className="leading-[0]">Send Money</span>
+            <PiArrowLineUpRight size={"1.2em"} />
+          </Link>
+        </Button>
       </div>
     ),
   },

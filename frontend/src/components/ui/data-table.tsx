@@ -31,7 +31,7 @@ const DataTable = <TData, TValue>({
     getPaginationRowModel: getPaginationRowModel(),
     initialState: {
       pagination: {
-        pageSize: 8,
+        pageSize: 6,
         pageIndex: 0,
       },
     },
@@ -100,6 +100,7 @@ const DataTable = <TData, TValue>({
             size="sm"
             onClick={() => table.previousPage()}
             disabled={!table.getCanPreviousPage()}
+            className="text-primary"
           >
             Previous
           </Button>
@@ -108,6 +109,7 @@ const DataTable = <TData, TValue>({
             size="sm"
             onClick={() => table.nextPage()}
             disabled={!table.getCanNextPage()}
+            className="text-primary"
           >
             Next
           </Button>
