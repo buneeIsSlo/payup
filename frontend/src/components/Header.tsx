@@ -53,7 +53,7 @@ function DropdownMenuDemo({ user }: { user: TUserProfileData }) {
       <DropdownMenuTrigger className="px-2" asChild disabled={isLoggingOut}>
         <Button variant="ghost" className="py-6">
           <span className="flex items-center space-x-2">
-            <Avatar initial={"m"} />
+            <Avatar initial={user.firstName[0]} />
             <span className="flex flex-col items-start gap-0.5">
               <span className="leading-none">
                 {user.firstName + " " + user.lastName}
