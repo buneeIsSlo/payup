@@ -1,3 +1,4 @@
+const mongoose = require("mongoose");
 const Account = require("../models/Account");
 
 module.exports.balance_get = (async (req, res) => {
@@ -22,12 +23,12 @@ module.exports.transfer = (async (req, res) => {
 
         const account = await Account.findOne({ userId: req.userId }).session(session);
         if (!account || account.balance < amount) {
-            throw new Error("Insufficient balance");
+            throw new Error("You're too broke to do that lol!");
         }
 
         const toAccount = await Account.findOne({ userId: to }).session(session);
         if (!toAccount) {
-            throw new Error("Invalid account");
+            throw new Error("Invalid account!");
         }
 
         await Account.updateOne({ userId: req.userId }, { $inc: { balance: -amount } }).session(session);
@@ -35,13 +36,13 @@ module.exports.transfer = (async (req, res) => {
 
         await session.commitTransaction();
         res.json({
-            message: "Transfer successful"
+            message: "Transfer successful!"
         });
     }
     catch (error) {
         await session.abortTransaction();
         res.status(400).json({
-            message: error.message
+            error: error.message
         });
     }
     finally {
