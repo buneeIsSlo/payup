@@ -19,6 +19,7 @@ import PrivateLayout from "./components/PrivateLayout.tsx";
 import HomeLayout from "./components/HomeLayout.tsx";
 import NotFound from "./pages/NotFound.tsx";
 import { validateToken } from "./lib/api-client.ts";
+import { Toaster } from "@/components/ui/sonner";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -47,5 +48,6 @@ const router = createBrowserRouter(
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <RouterProvider router={router} />
+    <Toaster richColors position="bottom-center" />
   </React.StrictMode>
 );
