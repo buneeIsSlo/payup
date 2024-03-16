@@ -9,6 +9,10 @@ import {
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { sendMoney } from "@/lib/api-client";
 
 function Avatar({ initial }: { initial: string }) {
   return (
@@ -22,6 +26,9 @@ function Avatar({ initial }: { initial: string }) {
 
 const SendMoney = () => {
   const { state } = useLocation();
+  const [amount, setAmount] = useState<number>(0);
+  const [isSending, setIsSending] = useState<boolean>(false);
+  const navigate = useNavigate();
 
   if (!state) {
     return (
@@ -34,6 +41,33 @@ const SendMoney = () => {
       </main>
     );
   }
+
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+
+    try {
+      setIsSending(true);
+
+      const response = await sendMoney({
+        amount: Math.round(Math.abs(amount)),
+        to: state.friend._id,
+      });
+      if (response.message) {
+        toast.success(response.message);
+        navigate(-1);
+      }
+      if (response.error) {
+        toast.error(response.error);
+        setAmount(0);
+      }
+    } catch (err) {
+      console.log(err);
+      toast.error("Can't process payments at this moment");
+    } finally {
+      setIsSending(false);
+    }
+  }
+
   return (
     <main className="flex-1 px-4">
       <h1 className="text-center text-3xl font-bold py-6">Send Money</h1>
@@ -51,15 +85,25 @@ const SendMoney = () => {
           </CardHeader>
           <hr className="w-[90%] border-secondary mx-auto" />
           <CardContent className="py-4">
-            <div className="grid w-full items-center gap-4">
-              <div className="flex flex-col space-y-1.5">
-                <Label htmlFor="amount" className="text-lg">
-                  Enter Amount
-                </Label>
-                <Input id="amount" type="number" min="1" />
+            <form onSubmit={handleSubmit}>
+              <div className="grid w-full items-center gap-4">
+                <div className="flex flex-col space-y-1.5">
+                  <Label htmlFor="amount" className="text-lg">
+                    Enter Amount
+                  </Label>
+                  <Input
+                    id="amount"
+                    type="number"
+                    min="1"
+                    value={amount > 0 ? amount : ""}
+                    required
+                    onChange={(e) => setAmount(+e.target.value)}
+                  />
+                </div>
+                {!isSending && <Button type="submit">Send</Button>}
+                {isSending && <Button disabled>Please wait</Button>}
               </div>
-              <Button>Send</Button>
-            </div>
+            </form>
           </CardContent>
         </Card>
       </section>

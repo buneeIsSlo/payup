@@ -9,6 +9,11 @@ export type TUserProfileData = Omit<TUserData, "password">;
 
 export type TLoginUserData = Pick<TUserData, "username" | "password">;
 
+export type TTransferMoney = {
+    amount: number;
+    to: string;
+}
+
 export type TChildren = {
     children: React.ReactNode
 }
