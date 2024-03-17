@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "server": "nodemon index.js",
     "seed": "node -r dotenv/config seed.js"
   },
   "keywords": [],
@@ -20,5 +20,8 @@
     "mongoose": "^8.1.0",
     "zod": "^3.22.4",
     "zod-validation-error": "^3.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.0"
   }
 }
