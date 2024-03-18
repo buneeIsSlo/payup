@@ -16,7 +16,6 @@ const columns: ColumnDef<User>[] = [
     id: "index",
     header: "No.",
     cell: ({ row }) => <span>{row.index + 1}</span>,
-    size: 50,
   },
   {
     id: "name",

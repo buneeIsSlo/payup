@@ -41,19 +41,12 @@ const DataTable = <TData, TValue>({
     <div className="w-full">
       <div className="rounded-md border">
         <Table>
-          <TableHeader className="w-20px">
+          <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
                   return (
-                    <TableHead
-                      key={header.id}
-                      className={
-                        header.getSize() !== 150
-                          ? `w-[${header.getSize()}px]`
-                          : "w-auto"
-                      }
-                    >
+                    <TableHead key={header.id}>
                       {header.isPlaceholder
                         ? null
                         : flexRender(
