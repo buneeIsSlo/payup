@@ -1,5 +1,5 @@
 import { ColumnDef } from "@tanstack/react-table";
-import { FriendsAvatar } from "../Avatars";
+import { AvatarSm } from "../Avatars";
 import { Link } from "react-router-dom";
 import { Button } from "./button";
 import { PiArrowLineUpRight } from "react-icons/pi";
@@ -22,7 +22,7 @@ const columns: ColumnDef<User>[] = [
     header: "Name",
     cell: ({ row }) => (
       <div className="capitalize flex space-x-2 items-center select-none">
-        <FriendsAvatar initial={row.original.firstName[0]} />
+        <AvatarSm initial={row.original.firstName[0]} />
         <span className="max-w-[100px] truncate">
           {row.original.firstName + " " + row.original.lastName}
         </span>

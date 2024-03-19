@@ -13,16 +13,7 @@ import { toast } from "sonner";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { sendMoney } from "@/lib/api-client";
-
-function Avatar({ initial }: { initial: string }) {
-  return (
-    <span className="absolute -top-[50%] translate-y-6 md:translate-y-6 lg:translate-y-5 left-[50%] -translate-x-[50%] h-14 w-14 lg:h-[4.5rem] lg:w-[4.5rem] bg-white outline outline-2 outline-primary grid place-items-center rounded-full">
-      <span className="text-primary text-xl font-semibold lg:text-2xl h-full flex items-center leading-[0]">
-        {initial.toLocaleUpperCase()}
-      </span>
-    </span>
-  );
-}
+import { AvatarLg } from "@/components/Avatars";
 
 const SendMoney = () => {
   const { state } = useLocation();
@@ -77,7 +68,7 @@ const SendMoney = () => {
         <Card className="overflow-hidden w-[90%] max-w-[420px] mx-auto pb-5">
           <div className="bg-primary h-20 w-full"></div>
           <CardHeader className="text-center relative pt-7 lg:pt-9">
-            <Avatar initial={state.friend.firstName[0]} />
+            <AvatarLg initial={state.friend.firstName[0]} />
             <CardTitle className="capitalize font-bold md:text-xl lg:text-2xl">
               {state.friend.firstName} {state.friend.lastName}
             </CardTitle>

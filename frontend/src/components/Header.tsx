@@ -9,6 +9,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { AvatarMd } from "./Avatars";
 import { Link } from "react-router-dom";
 import { PiNotePencil, PiPower } from "react-icons/pi";
 import { useAuthContext } from "@/hooks/useAuthContext";
@@ -28,16 +29,6 @@ const Header = () => {
   );
 };
 
-function Avatar({ initial }: { initial: string }) {
-  return (
-    <span className="h-10 w-10 bg-primary-foreground outline outline-1 outline-primary grid place-items-center rounded-full">
-      <span className="text-primary text-xl h-full flex items-center leading-[0]">
-        {initial.toLocaleUpperCase()}
-      </span>
-    </span>
-  );
-}
-
 function DropdownMenuDemo({ user }: { user: TUserProfileData }) {
   const { dispatch } = useAuthContext();
   const [isLoggingOut, setIsLoggingOut] = useState<boolean>(false);
@@ -53,7 +44,7 @@ function DropdownMenuDemo({ user }: { user: TUserProfileData }) {
       <DropdownMenuTrigger className="px-2" asChild disabled={isLoggingOut}>
         <Button variant="ghost" className="py-6">
           <span className="flex items-center space-x-2">
-            <Avatar initial={user.firstName[0]} />
+            <AvatarMd initial={user.firstName[0]} />
             <span className="flex flex-col items-start gap-0.5">
               <span className="capitalize leading-none">
                 {user.firstName + " " + user.lastName}
