@@ -36,13 +36,21 @@ userSchema.pre("save", async function (next) {
     next();
 })
 
+userSchema.pre("findOneAndUpdate", async function (next) {
+    const update = this.getUpdate();
+    if (update.$set.password) {
+        const salt = await bcrypt.genSalt();
+        update.$set.password = await bcrypt.hash(update.$set.password, salt);
+    }
+    next();
+})
+
 userSchema.statics.login = async function (username, password) {
     const user = await this.findOne({ username });
     if (user) {
         const auth = await bcrypt.compare(password, user.password);
         if (auth) return user;
         throw Error("Password is incorrect");
-        // return {error: "Password is incorrect"}
     }
     else {
         throw Error("Username is incorrect");

@@ -151,12 +151,16 @@ module.exports.update_put = (async (req, res) => {
         zodUpdate.parse(req.body);
 
         try {
-            await User.updateOne(
+            const updatedUser = await User.findOneAndUpdate(
                 { _id: req.userId },
-                { $set: req.body }
+                { $set: req.body },
+                { new: true }
             );
 
-            res.status(200).json({ message: "Profile updated successfully" });
+            res.status(200).json({
+                updatedUser,
+                message: "Profile updated successfully!"
+            });
         }
         catch (err) {
             res.status(411).json({ error: err })
