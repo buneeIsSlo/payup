@@ -156,9 +156,10 @@ module.exports.update_put = (async (req, res) => {
                 { $set: req.body },
                 { new: true }
             );
+            const { username, firstName, lastName } = updatedUser
 
             res.status(200).json({
-                updatedUser,
+                updatedUser: { username, firstName, lastName },
                 message: "Profile updated successfully!"
             });
         }
@@ -174,23 +175,40 @@ module.exports.update_put = (async (req, res) => {
 module.exports.bulk_get = (async (req, res) => {
     try {
         const filter = req.query.filter || "";
+        const currentUserId = req.userId;
 
         const users = await User.find({
-            "$or": [{
-                firstName: {
-                    "$regex": filter
-                }
-            },
-            {
-                lastName: {
-                    "$regex": filter
-                }
-            }
-            ]
+            $and: [
+                {
+                    _id: { $ne: currentUserId },
+                },
+                {
+                    $or: [
+                        {
+                            firstName: {
+                                $regex: filter,
+                                $options: "i", // Case-insensitive option
+                            },
+                        },
+                        {
+                            lastName: {
+                                $regex: filter,
+                                $options: "i", // Case-insensitive option
+                            },
+                        },
+                    ],
+                },
+            ],
         });
-        const filteredUsers = users.filter((user) => String(user._id) !== req.userId); // returns every user except the logged in user
 
-        res.status(200).json({ users: filteredUsers });
+        const mappedUsers = users.map((user) => ({
+            _id: user._id,
+            username: user.username,
+            firstName: user.firstName,
+            lastName: user.lastName,
+        }));
+
+        res.status(200).json({ users: mappedUsers });
     }
     catch (err) {
         res.status(400).json({ error: err });
