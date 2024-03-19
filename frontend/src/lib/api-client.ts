@@ -1,4 +1,4 @@
-import { TUserData, TLoginUserData, TTransferMoney } from "./types";
+import { TUserData, TLoginUserData, TUpdateUserData, TTransferMoney } from "./types";
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 export async function validateToken() {
@@ -47,6 +47,23 @@ export async function validateLoginForm(data: TLoginUserData) {
 
         const jsonData = await response.json();
         return jsonData;
+    } catch (err) {
+        return err;
+    }
+}
+
+export async function validateUpdateForm(data: TUpdateUserData) {
+    try {
+        const response = await fetch(`${API_BASE_URL}/api/v1/user/update`, {
+            method: "PUT",
+            credentials: "include",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+        });
+
+        return response.json();
     } catch (err) {
         return err;
     }

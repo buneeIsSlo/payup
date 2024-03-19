@@ -5,7 +5,10 @@ type TUser = {
   user: TUserData | null;
 };
 
-type ACTION_TYPE = { type: "login"; payload: TUserData } | { type: "logout" };
+type ACTION_TYPE =
+  | { type: "login"; payload: TUserData }
+  | { type: "logout" }
+  | { type: "update"; payload: TUserData };
 
 type ContextProps = {
   state: TUser;
@@ -22,6 +25,8 @@ const authReducer = (state: TUser, action: ACTION_TYPE): TUser => {
       return { user: action.payload };
     case "logout":
       return { user: null };
+    case "update":
+      return { user: action.payload };
     default:
       return state;
   }
