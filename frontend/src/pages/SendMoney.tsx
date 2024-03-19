@@ -70,7 +70,9 @@ const SendMoney = () => {
 
   return (
     <main className="flex-1 px-4">
-      <h1 className="text-center text-3xl font-bold py-6">Send Money</h1>
+      <h1 className="text-center text-3xl font-bold py-6">
+        Send Money <span aria-hidden="true">💸</span>
+      </h1>
       <section className="py-6">
         <Card className="overflow-hidden w-[90%] max-w-[420px] mx-auto pb-5">
           <div className="bg-primary h-20 w-full"></div>

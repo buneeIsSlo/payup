@@ -55,7 +55,7 @@ function DropdownMenuDemo({ user }: { user: TUserProfileData }) {
           <span className="flex items-center space-x-2">
             <Avatar initial={user.firstName[0]} />
             <span className="flex flex-col items-start gap-0.5">
-              <span className="leading-none">
+              <span className="capitalize leading-none">
                 {user.firstName + " " + user.lastName}
               </span>
               <span className="leading-none text-muted-foreground font-thin">
