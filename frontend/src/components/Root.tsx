@@ -3,6 +3,17 @@ import { Outlet, useLoaderData, Await } from "react-router-dom";
 import { AuthContextProvider } from "@/context/AuthContext";
 import { TUserProfileData } from "@/lib/types";
 import { Button } from "./ui/button";
+import { spinnerLg } from "../assets/images/index";
+
+const Spinner = () => {
+  return (
+    <div className="h-dvh grid place-content-center container">
+      <div>
+        <img src={spinnerLg} alt="loading" className="md:scale-150" />
+      </div>
+    </div>
+  );
+};
 
 const ErrorElement = () => {
   return (
@@ -30,7 +41,7 @@ const Root = () => {
   };
 
   return (
-    <Suspense fallback={<h1 className="text-2xl">Loading...</h1>}>
+    <Suspense fallback={<Spinner />}>
       <Await resolve={dataPromise} errorElement={<ErrorElement />}>
         {(data) => {
           const user = data.user || null;
