@@ -10,10 +10,11 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+import { AvatarLg } from "@/components/Avatars";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { sendMoney } from "@/lib/api-client";
-import { AvatarLg } from "@/components/Avatars";
+import { spinnerSm } from "@/assets/images";
 
 const SendMoney = () => {
   const { state } = useLocation();
@@ -94,7 +95,17 @@ const SendMoney = () => {
                   />
                 </div>
                 {!isSending && <Button type="submit">Send</Button>}
-                {isSending && <Button disabled>Please wait</Button>}
+                {isSending && (
+                  <Button className="flex space-x-1" disabled>
+                    <img
+                      className="block"
+                      src={spinnerSm}
+                      alt=""
+                      aria-hidden="true"
+                    />
+                    <span className="block">Please wait</span>
+                  </Button>
+                )}
               </div>
             </form>
           </CardContent>

@@ -13,6 +13,7 @@ import { useNavigate } from "react-router-dom";
 import { TUpdateUserData } from "@/lib/types";
 import { useAuthContext } from "@/hooks/useAuthContext";
 import { toast } from "sonner";
+import { spinnerSm } from "@/assets/images";
 
 const ErrorMessage = ({ id, message }: { id: string; message: string }) => {
   return (
@@ -153,8 +154,14 @@ const EditInfo = () => {
                   </Button>
                 )}
                 {isValidatingForm && (
-                  <Button className="w-full mt-1" disabled>
-                    Please wait
+                  <Button className="flex space-x-1 mt-1" disabled>
+                    <img
+                      className="block"
+                      src={spinnerSm}
+                      alt=""
+                      aria-hidden="true"
+                    />
+                    <span className="block">Please wait</span>
                   </Button>
                 )}
               </div>

@@ -12,6 +12,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Logo from "@/components/Logo";
+import { spinnerSm } from "@/assets/images";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { TUserData } from "@/lib/types";
@@ -171,8 +172,14 @@ const SignUp = () => {
                 </Button>
               )}
               {isValidatingForm && (
-                <Button className="w-full mt-1" disabled>
-                  Please wait
+                <Button className="flex space-x-1 mt-1" disabled>
+                  <img
+                    className="block"
+                    src={spinnerSm}
+                    alt=""
+                    aria-hidden="true"
+                  />
+                  <span className="block">Please wait</span>
                 </Button>
               )}
             </div>

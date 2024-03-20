@@ -16,6 +16,7 @@ import { useAuthContext } from "@/hooks/useAuthContext";
 import { useNavigate } from "react-router-dom";
 import { validateLoginForm } from "@/lib/api-client";
 import { TLoginUserData } from "@/lib/types";
+import { spinnerSm } from "@/assets/images";
 
 const ErrorMessage = ({ id, message }: { id: string; message: string }) => {
   return (
@@ -114,8 +115,9 @@ const Login = () => {
                   </Button>
                 )}
                 {isValidatingForm && (
-                  <Button className="w-full mt-1" disabled>
-                    Please wait
+                  <Button className="w-full mt-1 flex space-x-1" disabled>
+                    <img className="block" src={spinnerSm} alt="" />
+                    <span className="block">Please wait</span>
                   </Button>
                 )}
               </div>
