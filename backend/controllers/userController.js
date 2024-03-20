@@ -80,7 +80,6 @@ module.exports.signup_post = (async (req, res) => {
             res.cookie('jwt', token, {
                 httpOnly: true,
                 maxAge: maxAge * 1000,
-                domain: "localhost",
                 sameSite: "none",
                 secure: true
             });
@@ -114,7 +113,6 @@ module.exports.login_post = (async (req, res) => {
             res.cookie('jwt', token, {
                 httpOnly: true,
                 maxAge: maxAge * 1000,
-                domain: "localhost",
                 sameSite: "none",
                 secure: true
             });
@@ -135,7 +133,6 @@ module.exports.logout_get = (async (req, res) => {
         res.cookie("jwt", "", {
             httpOnly: true,
             maxAge: 0,
-            domain: "localhost",
             sameSite: "none",
             secure: true
         });
