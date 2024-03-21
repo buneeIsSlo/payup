@@ -80,7 +80,8 @@ module.exports.signup_post = (async (req, res) => {
             res.cookie('jwt', token, {
                 httpOnly: true,
                 maxAge: maxAge * 1000,
-
+                samSite: "none",
+                secure: true,
             });
 
             const randomBalance = Math.floor(Math.random() * 5001) + 5000; // Generates a random number btetween 5,000 and 10,000.
@@ -112,6 +113,8 @@ module.exports.login_post = (async (req, res) => {
             res.cookie('jwt', token, {
                 httpOnly: true,
                 maxAge: maxAge * 1000,
+                samSite: "none",
+                secure: true,
             });
             res.status(200).json({ user });
         }
@@ -130,6 +133,8 @@ module.exports.logout_get = (async (req, res) => {
         res.cookie("jwt", "", {
             httpOnly: true,
             maxAge: 0,
+            samSite: "none",
+            secure: true,
         });
 
         res.status(200).send("Logout successful");
