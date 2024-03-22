@@ -33,7 +33,7 @@ const Dashboard = () => {
   useEffect(() => {
     async function getBalance() {
       try {
-        setIsFetchingBalance(false);
+        setIsFetchingBalance(true);
         const response = await fetchBalance();
         if (response.balance) {
           setBalance(response.balance);
