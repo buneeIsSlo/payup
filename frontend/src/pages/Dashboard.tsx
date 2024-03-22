@@ -4,12 +4,15 @@ import { Input } from "@/components/ui/input";
 import { fetchBalance, fetchUsers } from "@/lib/api-client";
 import { useEffect, useState } from "react";
 import useDebounce from "@/hooks/useDebounceValue";
+import { toast } from "sonner";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const Dashboard = () => {
   const [users, setUsers] = useState([]);
   const [searchQuery, setSearchQuery] = useState<string>("");
   const debounceSearch = useDebounce(searchQuery, 500);
-  const [balance, setBalance] = useState<null | number>(null);
+  const [balance, setBalance] = useState<number>(0);
+  const [isFetchingBalance, setIsFetchingBalance] = useState<boolean>(false);
 
   useEffect(() => {
     async function getUsers() {
@@ -29,11 +32,18 @@ const Dashboard = () => {
 
   useEffect(() => {
     async function getBalance() {
-      const response = await fetchBalance();
-      if (response.balance) {
-        setBalance(response.balance);
+      try {
+        setIsFetchingBalance(false);
+        const response = await fetchBalance();
+        if (response.balance) {
+          setBalance(response.balance);
+        }
+      } catch (err) {
+        toast.error("Failed to load bank balance");
+        console.error(err);
+      } finally {
+        setIsFetchingBalance(false);
       }
-      return;
     }
 
     getBalance();
@@ -51,13 +61,15 @@ const Dashboard = () => {
               onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
-          <div className="text-right">
+          <div className="text-right w-[15%]">
             <span className="capitalize text-slate-400 text-sm">
               your balance:
             </span>
-            <h1 className="text-4xl font-semibold leading-none">{`$${
-              balance === null ? 0 : balance
-            }`}</h1>
+            {isFetchingBalance ? (
+              <Skeleton className="w-full h-10" />
+            ) : (
+              <h1 className="text-4xl font-semibold leading-none">{`$${balance}`}</h1>
+            )}
           </div>
         </div>
         {users && <DataTable columns={columns} data={users} />}
