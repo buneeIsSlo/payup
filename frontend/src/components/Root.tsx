@@ -45,7 +45,7 @@ const Root = () => {
       <Await resolve={dataPromise} errorElement={<ErrorElement />}>
         {(data) => {
           const user = data.user || null;
-          console.log({ user }, "user data");
+          // console.log({ user }, "user data");
           return (
             <AuthContextProvider userData={user}>
               <Outlet />

@@ -11,8 +11,8 @@ export async function validateToken() {
             },
         });
         return response.json();
-    } catch (error) {
-        console.error("Error fetching authentication info:", error);
+    } catch (err) {
+        return err;
     }
 }
 
