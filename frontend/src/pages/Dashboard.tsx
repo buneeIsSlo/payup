@@ -68,7 +68,9 @@ const Dashboard = () => {
             {isFetchingBalance ? (
               <Skeleton className="w-full h-10" />
             ) : (
-              <h1 className="text-4xl font-semibold leading-none">{`$${balance}`}</h1>
+              <h1 className="text-4xl font-semibold leading-none">
+                {`$${balance.toLocaleString("en-US")}`}
+              </h1>
             )}
           </div>
         </div>
