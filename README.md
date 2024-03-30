@@ -67,6 +67,14 @@ JWT_SECRET="YOUR_SUPER_SECRET_CODE_HERE"
 npm run server
 ```
 
+6. **Seed the Database(optional)**
+
+- _Open a new terminal and make sure you're in the backend directory_
+
+```bash
+npm run seed
+```
+
 6. **Navigate to frontend directory and install the dependencies**
 
 ```bash
